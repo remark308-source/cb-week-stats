@@ -1,0 +1,2 @@
+      - name: 執行統計腳本
+        run: python scripts/fetch_cb_stats.py  # 加上 scripts/ 前綴
