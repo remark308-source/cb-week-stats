@@ -1,2 +1,33 @@
-       name: 執行統計腳本
-        run: python scripts/fetch_cb_stats.py  # 加上 scripts/ 前綴
+name: Daily CB Stats
+
+on:
+  schedule:
+    - cron: '0 8 * * *'  # 台湾时间每天下午 4 点（UTC+8）
+  workflow_dispatch:      # 允许手动触发
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: 执行统计脚本
+        run: python scripts/fetch_cb_stats.py
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
